@@ -10,6 +10,7 @@ add_executable(clox
     src/chunk.c
     src/debug.c
     src/value.c
+    src/vm.c
 )
 
 target_link_libraries(clox PkgConfig::GLIB)

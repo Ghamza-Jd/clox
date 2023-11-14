@@ -7,7 +7,7 @@ void init_value_array(ValueArray* array) { array->values = g_array_new(FALSE, FA
 void write_value_array(ValueArray* array, Value value) { g_array_append_val(array->values, value); }
 
 void free_value_array(ValueArray* array) {
-    g_array_free(array->values, TRUE);
+    g_array_unref(array->values);
     init_value_array(array);
 }
 

@@ -2,7 +2,7 @@
 
 Learning compiler construction, C, and glib.
 
-## Todo challenges:
+## Todo challenges
 
 ### Chapter 14
 

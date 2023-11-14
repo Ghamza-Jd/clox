@@ -17,8 +17,8 @@ int add_constant(Chunk* chunk, Value value) {
 }
 
 void free_chunk(Chunk* chunk) {
-    g_array_free(chunk->code, TRUE);
-    g_array_free(chunk->lines, TRUE);
+    g_array_unref(chunk->code);
+    g_array_unref(chunk->lines);
     free_value_array(&chunk->constants);
     init_chunk(chunk);
 }
