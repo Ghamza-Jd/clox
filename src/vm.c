@@ -48,14 +48,14 @@ static InterpretResult run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
         disassemble_instruction(vm.chunk, vm.ip);
-        printf(" ");
+        g_print(" ");
         for (int i = 0; i < vm.stack->length; i++) {
             Value* slot = g_queue_peek_nth(vm.stack, i);
-            printf("[ ");
+            g_print("[ ");
             print_value(*slot);
-            printf(" ]");
+            g_print(" ]");
         }
-        printf("\n");
+        g_print("\n");
 #endif
         uint8_t instruction;
         switch (instruction = read_byte()) {
@@ -92,7 +92,7 @@ static InterpretResult run() {
 
         case OP_RETURN: {
             print_value(pop());
-            printf("\n");
+            g_print("\n");
             return INTERPRET_OK;
         }
         }

@@ -1,3 +1,4 @@
+#include <glib.h>
 #include <stdio.h>
 
 #include "value.h"
@@ -11,4 +12,4 @@ void free_value_array(ValueArray* array) {
     init_value_array(array);
 }
 
-void print_value(Value value) { printf("%g", value); }
+void print_value(Value value) { g_print("%g", value); }

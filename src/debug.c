@@ -1,10 +1,11 @@
+#include <glib.h>
 #include <stdio.h>
 
 #include "debug.h"
 #include "value.h"
 
 void disassemble_chunk(Chunk* chunk, const char* name) {
-    printf("== %s ==\n", name);
+    g_print("== %s ==\n", name);
     for (int offset = 0; offset < chunk->code->len;) {
         offset = disassemble_instruction(chunk, offset);
     }
@@ -12,26 +13,26 @@ void disassemble_chunk(Chunk* chunk, const char* name) {
 
 static int constant_instruction(const char* name, Chunk* chunk, int offset) {
     uint8_t constant = g_array_index(chunk->code, uint8_t, offset + 1);
-    printf("%-16s %4d '", name, constant);
+    g_print("%-16s %4d '", name, constant);
     print_value(g_array_index(chunk->constants.values, Value, constant));
-    printf("'\n");
+    g_print("'\n");
     return offset + 2;
 }
 
 static int simple_instruction(const char* name, int offset) {
-    printf("%s\n", name);
+    g_print("%s\n", name);
     return offset + 1;
 }
 
 int disassemble_instruction(Chunk* chunk, int offset) {
-    printf("%04d ", offset);
+    g_print("%04d ", offset);
 
     int current_line = g_array_index(chunk->lines, int, offset);
 
     if (offset > 0 && current_line == g_array_index(chunk->lines, int, offset - 1)) {
-        printf("   | ");
+        g_print("   | ");
     } else {
-        printf("%4d ", current_line);
+        g_print("%4d ", current_line);
     }
 
     uint8_t instruction = g_array_index(chunk->code, uint8_t, offset);
@@ -58,7 +59,7 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         return simple_instruction("OP_RETURN", offset);
 
     default:
-        printf("Unknown opcode %d\n", instruction);
+        g_print("Unknown opcode %d\n", instruction);
         return offset + 1;
     }
 }

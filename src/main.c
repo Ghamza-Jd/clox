@@ -5,35 +5,65 @@
 #include "debug.h"
 #include "vm.h"
 
-int main() {
-    init_vm();
+static gchar* arg_path;
 
-    Chunk chunk;
-    init_chunk(&chunk);
+static GOptionEntry entries[] = {{"path", 'p', 0, G_OPTION_ARG_FILENAME, &arg_path, "Path to .clx file", NULL}, {NULL}};
 
-    int constant = add_constant(&chunk, 1.2);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
+static void repl();
+static void run_file(const char* path);
 
-    constant = add_constant(&chunk, 3.4);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
+int main(int argc, char** argv) {
+    GError* error = NULL;
+    GOptionContext* ctx;
 
-    write_chunk(&chunk, OP_ADD, 123);
+    ctx = g_option_context_new("");
+    g_option_context_add_main_entries(ctx, entries, NULL);
 
-    constant = add_constant(&chunk, 5.6);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
+    gboolean did_succeed = g_option_context_parse(ctx, &argc, &argv, &error);
 
-    write_chunk(&chunk, OP_DIVIDE, 123);
-    write_chunk(&chunk, OP_NEGATE, 123);
+    if (!did_succeed) {
+        g_printerr("Failed to parse args\n");
+        exit(1);
+    }
 
-    write_chunk(&chunk, OP_RETURN, 123);
-    disassemble_chunk(&chunk, "test chunk");
-    interpret(&chunk);
-
-    free_vm();
-    free_chunk(&chunk);
+    if (arg_path != NULL) {
+        run_file(arg_path);
+    } else {
+        repl();
+    }
 
     return 0;
+}
+
+static void repl() {
+    char line[1024];
+    for (;;) {
+        g_print("> ");
+
+        if (!fgets(line, sizeof(line), stdin)) {
+            g_print("\n");
+            break;
+        }
+
+        // interpret(line);
+    }
+}
+
+static void run_file(const char* path) {
+    GError* err = NULL;
+    char* source_code;
+    gsize length;
+    gboolean did_succeed = g_file_get_contents(path, &source_code, &length, &err);
+
+    if (did_succeed) {
+        // InterpretResult result = interpret(source_code);
+        // free(source_code);
+
+        // if (result == INTERPRET_COMPILE_ERROR) exit(65);
+        // if (result == INTERPRET_RUNTIME_ERROR) exit(70);
+    } else {
+        /* handle error with `err` */
+    }
+
+    g_free(source_code);
 }
