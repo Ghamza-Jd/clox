@@ -4,10 +4,12 @@
 #include <glib.h>
 
 #include "chunk.h"
+#include "value.h"
 
 typedef struct {
     Chunk* chunk;
     size_t ip;
+    GQueue* stack;
 } VM;
 
 typedef enum { INTERPRET_OK, INTERPRET_COMPILE_ERROR, INTERPRET_RUNTIME_ERROR } InterpretResult;
@@ -15,5 +17,7 @@ typedef enum { INTERPRET_OK, INTERPRET_COMPILE_ERROR, INTERPRET_RUNTIME_ERROR } 
 void init_vm();
 void free_vm();
 InterpretResult interpret(Chunk* chunk);
+void push(Value value);
+Value pop();
 
 #endif
