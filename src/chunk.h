@@ -6,7 +6,7 @@
 #include "common.h"
 #include "value.h"
 
-typedef enum { OP_CONSTANT, OP_RETURN } OpCode;
+typedef enum { OP_CONSTANT, OP_NEGATE, OP_RETURN } OpCode;
 
 typedef struct {
     GArray* code;

@@ -36,11 +36,14 @@ int disassemble_instruction(Chunk* chunk, int offset) {
 
     uint8_t instruction = g_array_index(chunk->code, uint8_t, offset);
     switch (instruction) {
-    case OP_RETURN:
-        return simple_instruction("OP_RETURN", offset);
-
     case OP_CONSTANT:
         return constant_instruction("OP_CONSTANT", chunk, offset);
+
+    case OP_NEGATE:
+        return simple_instruction("OP_NEGATE", offset);
+
+    case OP_RETURN:
+        return simple_instruction("OP_RETURN", offset);
 
     default:
         printf("Unknown opcode %d\n", instruction);
