@@ -8,7 +8,7 @@ VM vm;
 
 void init_vm() { vm.stack = g_queue_new(); }
 
-void free_vm() {}
+void free_vm() { g_queue_free(vm.stack); }
 
 static uint8_t read_byte() {
     uint8_t byte = g_array_index(vm.chunk->code, uint8_t, vm.ip);

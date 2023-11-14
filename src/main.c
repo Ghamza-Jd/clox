@@ -26,12 +26,15 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    init_vm();
+
     if (arg_path != NULL) {
         run_file(arg_path);
     } else {
         repl();
     }
 
+    free_vm();
     return 0;
 }
 
