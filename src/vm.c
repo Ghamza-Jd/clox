@@ -22,6 +22,28 @@ static Value read_constant() {
     return constant;
 }
 
+static void binary_op(BinaryOp op) {
+    Value rhs = pop();
+    Value lhs = pop();
+    switch (op) {
+    case ADD:
+        push(lhs + rhs);
+        break;
+
+    case SUBTRACT:
+        push(lhs - rhs);
+        break;
+
+    case MULTIPLY:
+        push(lhs * rhs);
+        break;
+
+    case DIVIDE:
+        push(lhs / rhs);
+        break;
+    }
+}
+
 static InterpretResult run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
@@ -40,6 +62,26 @@ static InterpretResult run() {
         case OP_CONSTANT: {
             Value constant = read_constant();
             push(constant);
+            break;
+        }
+
+        case OP_ADD: {
+            binary_op(ADD);
+            break;
+        }
+
+        case OP_SUBTRACT: {
+            binary_op(SUBTRACT);
+            break;
+        }
+
+        case OP_MULTIPLY: {
+            binary_op(MULTIPLY);
+            break;
+        }
+
+        case OP_DIVIDE: {
+            binary_op(DIVIDE);
             break;
         }
 
