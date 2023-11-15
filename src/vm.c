@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "common.h"
+#include "compiler.h"
 #include "debug.h"
 #include "vm.h"
 
@@ -26,21 +27,10 @@ static void binary_op(BinaryOp op) {
     Value rhs = pop();
     Value lhs = pop();
     switch (op) {
-    case ADD:
-        push(lhs + rhs);
-        break;
-
-    case SUBTRACT:
-        push(lhs - rhs);
-        break;
-
-    case MULTIPLY:
-        push(lhs * rhs);
-        break;
-
-    case DIVIDE:
-        push(lhs / rhs);
-        break;
+    case ADD:      push(lhs + rhs); break;
+    case SUBTRACT: push(lhs - rhs); break;
+    case MULTIPLY: push(lhs * rhs); break;
+    case DIVIDE:   push(lhs / rhs); break;
     }
 }
 
@@ -99,10 +89,9 @@ static InterpretResult run() {
     }
 }
 
-InterpretResult interpret(Chunk* chunk) {
-    vm.chunk = chunk;
-    vm.ip = 0;
-    return run();
+InterpretResult interpret(const char* source) {
+    compile(source);
+    return INTERPRET_OK;
 }
 
 void push(Value value) {

@@ -66,6 +66,8 @@ static void run_file(const char* path) {
         // if (result == INTERPRET_RUNTIME_ERROR) exit(70);
     } else {
         /* handle error with `err` */
+        g_printerr("Couldn't open file \"%s\"", path);
+        exit(74);
     }
 
     g_free(source_code);

@@ -12,4 +12,11 @@ BraceWrapping:
 
 DerivePointerAlignment: false
 PointerAlignment: Left
+
 IndentCaseLabels: false
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: false
