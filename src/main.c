@@ -48,7 +48,7 @@ static void repl() {
             break;
         }
 
-        // interpret(line);
+        interpret(line);
     }
 }
 
@@ -59,11 +59,10 @@ static void run_file(const char* path) {
     gboolean did_succeed = g_file_get_contents(path, &source_code, &length, &err);
 
     if (did_succeed) {
-        // InterpretResult result = interpret(source_code);
-        // free(source_code);
+        InterpretResult result = interpret(source_code);
 
-        // if (result == INTERPRET_COMPILE_ERROR) exit(65);
-        // if (result == INTERPRET_RUNTIME_ERROR) exit(70);
+        if (result == INTERPRET_COMPILE_ERROR) exit(65);
+        if (result == INTERPRET_RUNTIME_ERROR) exit(70);
     } else {
         /* handle error with `err` */
         g_printerr("Couldn't open file \"%s\"", path);

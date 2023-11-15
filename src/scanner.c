@@ -12,10 +12,36 @@ typedef struct {
 
 Scanner scanner;
 
+GHashTable* keywords;
+
+static void init_keywords() {
+    keywords = g_hash_table_new(g_str_hash, g_str_equal);
+
+#define INSERT_TOKEN(lexeme, token) g_hash_table_insert(keywords, lexeme, GINT_TO_POINTER(token))
+    INSERT_TOKEN("and", TOKEN_AND);
+    INSERT_TOKEN("class", TOKEN_CLASS);
+    INSERT_TOKEN("else", TOKEN_ELSE);
+    INSERT_TOKEN("if", TOKEN_IF);
+    INSERT_TOKEN("nil", TOKEN_NIL);
+    INSERT_TOKEN("or", TOKEN_OR);
+    INSERT_TOKEN("print", TOKEN_PRINT);
+    INSERT_TOKEN("return", TOKEN_RETURN);
+    INSERT_TOKEN("super", TOKEN_SUPER);
+    INSERT_TOKEN("let", TOKEN_VAR);
+    INSERT_TOKEN("while", TOKEN_WHILE);
+    INSERT_TOKEN("false", TOKEN_FALSE);
+    INSERT_TOKEN("for", TOKEN_FOR);
+    INSERT_TOKEN("fn", TOKEN_FUN);
+    INSERT_TOKEN("this", TOKEN_THIS);
+    INSERT_TOKEN("true", TOKEN_TRUE);
+#undef INSERT_TOKEN
+}
+
 void init_scanner(const char* source) {
     scanner.start = source;
     scanner.current = source;
     scanner.line = 1;
+    init_keywords();
 }
 
 static bool is_at_end() { return *scanner.current == '\0'; }
@@ -75,7 +101,20 @@ static void skip_whitespace() {
     }
 }
 
-static TokenType identifier_type() { return TOKEN_IDENTIFIER; }
+static TokenType identifier_type() {
+    while (is_alpha(peek())) advance();
+
+    gchar* word = g_strndup(scanner.start, scanner.current - scanner.start);
+    gboolean is_keyword = g_hash_table_contains(keywords, word);
+
+    if (is_keyword) {
+        gpointer ptr = g_hash_table_lookup(keywords, word);
+        TokenType type = GPOINTER_TO_INT(ptr);
+        return type;
+    }
+
+    return TOKEN_IDENTIFIER;
+}
 
 static Token make_string_token() {
     while (peek() != '"' && !is_at_end()) {
@@ -119,6 +158,7 @@ Token scan_token() {
     if (is_at_end()) return make_token(TOKEN_EOF);
 
     char c = advance();
+
     if (is_digit(c)) return make_number_token();
     if (is_alpha(c)) return make_identifier_token();
 
