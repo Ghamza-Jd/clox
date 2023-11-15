@@ -36,6 +36,13 @@ static Token make_err_token(const char* msg) {
     return token;
 }
 
+static char advance() {
+    scanner.current++;
+    return scanner.current[-1];
+}
+
+static char peek() { return *scanner.current; }
+
 static void skip_whitespace() {
     for (;;) {
         char c = peek();
@@ -53,13 +60,6 @@ static void skip_whitespace() {
 }
 
 static bool is_at_end() { return *scanner.current == '\0'; }
-
-static char advance() {
-    scanner.current++;
-    return scanner.current[-1];
-}
-
-static char peek() { return *scanner.current; }
 
 static bool match(char expected) {
     if (is_at_end()) return false;
